@@ -3,6 +3,9 @@ FROM ubuntu:utopic
 
 # runtime dependencies
 # (packages are listed alphabetically to ease maintenence)
+RUN  sudo mv /etc/apt/sources.list /etc/apt/sources.list.backup
+ADD ./sources.list /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		fontconfig-config \
 		fonts-dejavu-core \
