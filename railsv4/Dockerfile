@@ -27,10 +27,13 @@ WORKDIR /home/app
 
 # rvm install
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \ 
-  curl -sSL https://get.rvm.io | bash -s stable 
+    echo insecure >> ~/.curlrc && \
+   \curl -ksSL https://get.rvm.io | bash -s stable 
 
 # ruby install
-RUN /bin/bash -l -c "rvm requirements && rvm install 2.2.2 && rvm use 2.2.2 --default"
+RUN  source ~/.bash_profile \
+     && rvm install 2.2.2 \
+     && rvm use 2.2.2 --default
 
 # Change rubygems sources
 RUN /bin/bash -l -c "gem sources -a https://ruby.taobao.org/ && gem sources --remove https://rubygems.org/"
