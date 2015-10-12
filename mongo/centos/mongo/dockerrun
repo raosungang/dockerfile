@@ -1,1 +1,5 @@
-docker run -d 5c066ff2ba3c  --noprealloc --smallfiles
+docker run --name mongo -d 5c066ff2ba3c  --noprealloc --smallfiles
+
+
+docker run -d --name db jeff/mongodb:3.1
+docker run -it -P --name web --link db:db jeff/mongodb:3.1 
