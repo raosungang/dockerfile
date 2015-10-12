@@ -1,4 +1,10 @@
-FROM debian:wheezy
+FROM ubuntu:utopic
+# Change sources
+RUN  sudo mv /etc/apt/sources.list /etc/apt/sources.list.backup
+ADD ./sources.list /etc/apt/sources.list
+
+# ADD haproxy source 
+COPY ./haproxy-1.4.26.tar.gz /
 
 RUN apt-get update && apt-get install -y libpcre3 --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
@@ -7,7 +13,7 @@ ENV HAPROXY_VERSION 1.4.26
 ENV HAPROXY_MD5 0606180bb01d9b91b49e6ca16e681172
 
 # see http://sources.debian.net/src/haproxy/1.5.8-1/debian/rules/ for some helpful navigation of the possible "make" arguments
-RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make' \
+RUN buildDeps='cur l gcc libc6-dev libpcre3-dev libssl-dev make' \
 	&& set -x \
 	&& apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
 	&& curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz" -o haproxy.tar.gz \
