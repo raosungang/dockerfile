@@ -1,4 +1,3 @@
-
 # example Dockerfile for https://docs.docker.com/examples/postgresql_service/
 #
 
