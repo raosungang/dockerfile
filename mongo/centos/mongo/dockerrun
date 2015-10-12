@@ -1,0 +1,1 @@
+docker run -d 5c066ff2ba3c  --noprealloc --smallfiles
