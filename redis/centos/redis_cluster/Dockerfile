@@ -1,8 +1,8 @@
 # DOCKER-VERSION    1.8.2 
 #
 # Dockerizing Redis: Dockerfile for building Redis images
-#
-FROM jeff/centos
+
+FROM centos
 MAINTAINER skycn <raosungang@hotmail.com>
 
 RUN groupadd -r redis && useradd -r -g redis redis
@@ -21,6 +21,7 @@ RUN groupadd -r redis && useradd -r -g redis redis
 # Install Redis
 RUN  set -x \
     && cd /usr/src \
+    && yum install wget gcc libc6-dev libpcre3-dev libssl-dev make  -y \
     && wget http://download.redis.io/releases/redis-3.0.4.tar.gz -O redis.tar.gz \
     && tar -zxvf redis.tar.gz \
     && cd redis* \
@@ -28,12 +29,14 @@ RUN  set -x \
     && make install \
     && cp redis.conf /etc/redis.conf \
     && rm -rf /usr/src/
-EXPOSE 6379
+
 
 
 RUN mkdir /data && chown redis:redis /data
 VOLUME /data
 WORKDIR /data
 
-ENTRYPOINT  ["redis-server", "/etc/redis.conf"]
+COPY manage.sh manage.sh
+RUN chmod +x manage.sh
+ENTRYPOINT  ["manage.sh"]
 
