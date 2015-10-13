@@ -1,0 +1,47 @@
+docker run --name mongo -d 5c066ff2ba3c  --noprealloc --smallfiles
+
+
+docker run -d --name db jeff/mongodb:3.1
+docker run -it -P --name web --link db:db jeff/mongodb:3.1
+
+
+
+
+
+
+
+
+
+
+
+docker run --name rs_server3 -p 23117:27017 -d jeff/mongodb:3.1 --noprealloc --smallfiles --replSet rs1
+docker run --name rs_server2 -p 22117:27017 -d jeff/mongodb:3.1 --noprealloc --smallfiles --replSet rs1
+docker run --name rs_server1 -p 21117:27017 -d jeff/mongodb:3.1 --noprealloc --smallfiles --replSet rs1  
+
+
+
+
+myconf = {"_id":"rs1","members":[
+ {"_id":0,"host":"172.17.0.47:27017"},
+ {"_id":1,"host":"172.17.0.48:27017"},
+ {"_id":2,"host":"172.17.0.49:27017"}
+ ]
+ }
+{
+    "_id":"rs1",
+    "members":[
+        {
+            "_id":0,
+            "host":"172.17.0.47:27017"
+        },
+        {
+            "_id":1,
+            "host":"172.17.0.48:27017"
+        },
+        {
+            "_id":2,
+            "host":"172.17.0.49:27017"
+        }
+    ]
+}
+
