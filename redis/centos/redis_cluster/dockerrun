@@ -1,1 +1,8 @@
+
+  docker run -d -P --name redis-cluster-1 jeff/redis-cluster:3.0.4
+  docker run -d -P --name redis-cluster-2 jeff/redis-cluster:3.0.4
+  docker run -d -P --name redis-cluster-3 jeff/redis-cluster:3.0.4
+  docker run -d -P --name redis-cluster-4 jeff/redis-cluster:3.0.4
+
+
 docker run -d --name redis-server fff432aabd95 --appendonly yes

@@ -21,22 +21,28 @@ RUN groupadd -r redis && useradd -r -g redis redis
 # Install Redis
 RUN  set -x \
     && cd /usr/src \
-    && yum install wget gcc libc6-dev libpcre3-dev libssl-dev make  -y \
+    && yum install jemalloc wget gcc libc6-dev libpcre3-dev libssl-dev make  -y \
     && wget http://download.redis.io/releases/redis-3.0.4.tar.gz -O redis.tar.gz \
     && tar -zxvf redis.tar.gz \
     && cd redis* \
     && make \
     && make install \
+    && cd src \
+    && cp redis-trib.rb  /usr/local/bin
     && cp redis.conf /etc/redis.conf \
     && rm -rf /usr/src/
 
 
 
 RUN mkdir /data && chown redis:redis /data
+
+EXPOSE 6379
 VOLUME /data
 WORKDIR /data
 
-COPY manage.sh manage.sh
-RUN chmod +x manage.sh
-ENTRYPOINT  ["manage.sh"]
+ADD manage.sh manage.sh
+RUN chmod 775 manage.sh \
+    && chown redis:redis manage.sh
 
+ENTRYPOINT  ["/data/manage.sh"]
+CMD ["bash"]
