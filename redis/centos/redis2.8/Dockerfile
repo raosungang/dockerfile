@@ -2,10 +2,11 @@
 #
 # Dockerizing Redis: Dockerfile for building Redis images
 #
-FROM centos
+FROM jeff/centos
 MAINTAINER skycn <raosungang@hotmail.com>
 
-RUN groupadd -r redis && useradd -r -g redis redis
+RUN groupadd -r redis && useradd -r -g redis redis\
+    && mkdir /data && chown redis:redis /data
 
 RUN buildDeps='curl wget gcc libc6-dev libpcre3-dev libssl-dev make' \
     && set -x \
@@ -16,32 +17,13 @@ RUN buildDeps='curl wget gcc libc6-dev libpcre3-dev libssl-dev make' \
     && cd redis-2.8.13 \
     && make \
     && make install \
-    && mkdir /etc/redis \
-#    && { \
-#                echo; \
-#                echo 'daemonize yes;'; \
-#		echo 'loglevel notice;'; \
-#		echo 'logfile /var/log/redis.log;'; \
-#		echo 'dir ./;'; \
-#         } >> /etc/redis/redis.conf \
-#    && { \
-#         echo  'vm.overcommit_memory = 1'; \ 
-#        } >>/etc/sysctl.conf      
-#    && yum remove $buildDeps
-
+    && cp redis.conf /data/redis.conf \
+    && sed -i 's/appendonly no/appendonly yes/' /data/redis.conf \
+    && rm -rf /usr/src/ \
 
 EXPOSE 6379
 
-COPY redis.conf /etc/redis/redis.conf
-COPY redis.sh /etc/init.d/redis
-
-RUN chmod +x /etc/init.d/redis \
-    && chkconfig --add redis \
-    && chkconfig redis on
-
-RUN  mkdir -p /data/run/redis/ && mkdir -p /data/log/redis/
 VOLUME /data
 WORKDIR /data
 
-CMD ["/usr/local/bin/redis-server"]
-
+ENTRYPOINT  ["redis-server","/data/redis.conf"]
