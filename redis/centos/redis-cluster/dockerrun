@@ -1,0 +1,12 @@
+ redis-trib.rb create --replicas 1  172.17.0.89:6379 172.17.0.90:6379 172.17.0.91:6379 172.17.0.92:6379 172.17.0.93:6379 172.17.0.94:6379
+
+redis-trib.rb create --replicas 1 172.17.0.77:6379 172.17.0.78:6379 172.17.0.79:6379 172.17.0.80:6379 172.17.0.81:6379 172.17.0.82:6379 
+
+  docker run -d -P --name redis-cluster-1 jeff/redis-cluster:3.0.4
+  docker run -d -P --name redis-cluster-2 jeff/redis-cluster:3.0.4
+  docker run -d -P --name redis-cluster-3 jeff/redis-cluster:3.0.4
+  docker run -d -P --name redis-cluster-4 jeff/redis-cluster:3.0.4
+  docker run -d -P --name redis-cluster-5 jeff/redis-cluster:3.0.4
+  docker run -d -P --name redis-cluster-6 jeff/redis-cluster:3.0.4
+
+docker run -d --name redis-server fff432aabd95 --appendonly yes
