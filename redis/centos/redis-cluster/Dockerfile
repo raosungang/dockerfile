@@ -5,8 +5,8 @@
 FROM jeff/centos
 MAINTAINER skycn <raosungang@hotmail.com>
 
-RUN groupadd -r redis && useradd -r -g redis redis
-RUN mkdir /data && chown redis:redis /data
+RUN groupadd -r redis && useradd -r -g redis redis \
+    && mkdir /data && chown redis:redis /data
 
 # INSTALL tcl
 #RUN  set -x \
@@ -33,13 +33,6 @@ RUN  set -x \
     && cp utils/create-cluster/create-cluster /usr/local/bin \
     && rm -rf /usr/src/
 
-RUN set -x \
-     && gem sources -a https://ruby.taobao.org/ \
-     && gem sources --remove https://rubygems.org/ \
-     && gem install redis -V
-
-
-
 EXPOSE 6379
 VOLUME /data
 WORKDIR /data
@@ -47,6 +40,10 @@ WORKDIR /data
 ADD manage.sh manage.sh
 RUN chmod 775 manage.sh \
     && chown redis:redis manage.sh
+
+RUN  gem sources --remove https://rubygems.org/ \
+     && gem sources -a https://ruby.taobao.org/ \
+     && gem install redis -V
 
 ENTRYPOINT  ["/data/manage.sh"]
 CMD ["bash"]
