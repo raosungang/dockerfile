@@ -5,21 +5,14 @@ RUN groupadd -r rabbitmq && useradd -r -d /var/lib/rabbitmq -m -g rabbitmq rabbi
 
 RUN yum -y update && yum  install -y curl erlang && rm -rf /var/cache/yum/*
 
+RUN    yum install -y http://www.rabbitmq.com/releases/rabbitmq-server/v3.5.6/rabbitmq-server-3.5.6-1.noarch.rpm \ 
+      && rm -rf /var/cache/yum/* \
+      && mkdir -p /var/lock/subsys/ \
+      && /usr/sbin/rabbitmq-server -detached
 
-# get logs to stdout (thanks @dumbbell for pushing this upstream! :D)
-ENV RABBITMQ_LOGS=- RABBITMQ_SASL_LOGS=-
-# https://github.com/rabbitmq/rabbitmq-server/commit/53af45bf9a162dec849407d114041aad3d84feaf
-
-# http://www.rabbitmq.com/install-debian.html
-# "Please note that the word testing in this line refers to the state of our release of RabbitMQ, not any particular Debian distribution."
-ENV RABBITMQ_VERSION 3.5.6-1
-RUN    rpm --import https://www.rabbitmq.com/rabbitmq-signing-key-public.asc \
-      &&  yum install rabbitmq-server -y \
-      && rm -rf /var/cache/yum/* 
-
-
+RUN chmod 777 /etc/rabbitmq/
 RUN echo '[{rabbit, [{loopback_users, []}]}].' > /etc/rabbitmq/rabbitmq.config
-
+RUN rabbitmq-plugins enable --offline rabbitmq_management
 VOLUME /var/lib/rabbitmq
 
 # add a symlink to the .erlang.cookie in /root so we can "docker exec rabbitmqctl ..." without gosu
@@ -28,5 +21,5 @@ RUN ln -sf /var/lib/rabbitmq/.erlang.cookie /root/
 #COPY docker-entrypoint.sh /
 #ENTRYPOINT ["/docker-entrypoint.sh"]
 
-#EXPOSE 5672
-#CMD ["rabbitmq-server"]
+EXPOSE 5672
+ENTRYPOINT ["rabbitmq-server"]
