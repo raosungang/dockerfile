@@ -5,7 +5,7 @@
 # Dockerizing CentOS7: Dockerfile for building CentOS images
 #
 
-FROM jeff/centos
+FROM centos:latest
 MAINTAINER skycn<raosungang@hotmail.com>
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added

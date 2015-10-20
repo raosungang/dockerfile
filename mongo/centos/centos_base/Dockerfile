@@ -4,7 +4,7 @@
 #
 # Dockerizing CentOS7: Dockerfile for building CentOS images
 #
-FROM       centos:centos7.1.1503
+FROM  centos
 MAINTAINER skycn<raosungang@hotmail.com>
 
 ENV TZ "Asia/Shanghai"
